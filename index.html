@@ -1,406 +1,220 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Sumas de Riemann 🎀 Rosa Estético</title>
-    <!-- Chart.js para la gráfica interactiva -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Math.js para evaluar funciones de forma segura -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --bg-color: #fff0f3;
-            --card-bg: #ffffff;
-            --primary-color: #ffb3c1;
-            --secondary-color: #ff85a1;
-            --accent-color: #c9184a;
-            --text-color: #59405c;
-            --input-border: #ffccd5;
-            --shadow: 0 10px 25px rgba(255, 131, 161, 0.15);
-        }
-
-        body {
-            font-family: 'Quicksand', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            background: var(--card-bg);
-            border-radius: 24px;
-            box-shadow: var(--shadow);
-            padding: 30px;
-            box-sizing: border-box;
-            border: 2px solid #ffccd5;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        h1 {
-            color: var(--accent-color);
-            font-size: 2.2rem;
-            margin-bottom: 5px;
-        }
-
-        header p {
-            color: #8c6d96;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.3fr;
-            gap: 30px;
-            align-items: start;
-        }
-
-        @media (max-width: 768px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .controls-panel {
-            background-color: #fff9fa;
-            padding: 20px;
-            border-radius: 18px;
-            border: 1px solid #ffe5ec;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        label {
-            font-weight: 700;
-            font-size: 0.95rem;
-            color: var(--text-color);
-        }
-
-        input, select {
-            padding: 10px 14px;
-            border-radius: 12px;
-            border: 1px solid var(--input-border);
-            background-color: #fff;
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1rem;
-            color: var(--text-color);
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, select:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 8px rgba(255, 133, 161, 0.3);
-        }
-
-        input[type="range"] {
-            accent-color: var(--secondary-color);
-            cursor: pointer;
-        }
-
-        /* Panel contenedor con altura fija estricta para evitar que se estire */
-        .chart-panel {
-            background: #fff;
-            border-radius: 18px;
-            padding: 15px;
-            border: 1px solid #ffe5ec;
-            position: relative;
-            width: 100%;
-            height: 400px;
-        }
-
-        .results-section {
-            margin-top: 30px;
-            background: #fff9fa;
-            border-radius: 18px;
-            padding: 20px;
-            border: 1px solid #ffe5ec;
-        }
-
-        .results-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .results-table th, .results-table td {
-            padding: 12px;
-            border-bottom: 1px solid #ffe5ec;
-            font-size: 0.95rem;
-        }
-
-        .results-table th {
-            color: var(--accent-color);
-            font-weight: 700;
-            background-color: #ffe5ec;
-            border-radius: 8px 8px 0 0;
-        }
-
-        .ribbon-tag {
-            display: inline-block;
-            background: var(--primary-color);
-            color: #fff;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cálculo Integral – Sumas de Riemann</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@800&family=Patrick+Hand&family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.1/math.min.js"></script>
+<style>
+  :root {
+    --rosa: #f48fb1;
+    --rosa-claro: #fde4ec;
+    --papel: #fff5f8;
+    --vino: #7a0f3a;
+    --azul: rgba(100, 181, 246, .45);
+    --azul-borde: #4a90c9;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px 16px 48px;
+    font-family: "Nunito", sans-serif; color: #222;
+    background:
+      linear-gradient(90deg, transparent 46px, #f3a0b8 47px, transparent 48px),
+      repeating-linear-gradient(transparent 0 27px, #f7c1d1 27px 28px),
+      var(--papel);
+  }
+  main { max-width: 980px; margin: 0 auto; }
+  h1 {
+    font-family: "Baloo 2", sans-serif; font-weight: 800;
+    color: var(--vino); text-align: center; margin: 8px 0 12px;
+    font-size: clamp(2rem, 6vw, 3.4rem); letter-spacing: .5px;
+  }
+  .nota {
+    display: block; width: fit-content; margin: 0 auto 28px;
+    padding: 8px 26px; background: #fff; border: 1px solid #ddd;
+    font-family: "Patrick Hand", cursive; font-size: 1.4rem; text-align: center;
+    transform: rotate(-1deg); box-shadow: 2px 3px 0 rgba(122,15,58,.12);
+  }
+  .panel {
+    background: var(--rosa-claro); border: 2px solid var(--vino);
+    border-radius: 14px; padding: 18px;
+  }
+  .fila { display: grid; grid-template-columns: 300px 1fr; gap: 20px; }
+  label { display: block; font-weight: 700; margin: 12px 0 4px; }
+  label:first-child { margin-top: 0; }
+  input[type=text], input[type=number], select {
+    width: 100%; padding: 9px 10px; font: inherit;
+    border: 1px solid var(--vino); border-radius: 8px; background: #fff;
+  }
+  input[type=range] { width: 100%; accent-color: var(--rosa); }
+  input:focus-visible, select:focus-visible { outline: 3px solid var(--vino); outline-offset: 1px; }
+  .grafica { background: #fff; padding: 10px; }
+  canvas { width: 100%; height: auto; aspect-ratio: 4 / 3; display: block; }
+  .error { color: #b00020; font-weight: 700; min-height: 1.3em; margin: 8px 0 0; }
+  .resumen { margin-top: 20px; }
+  .resumen h2 { margin: 0 0 12px; color: var(--vino); font-size: 1.2rem; }
+  .celdas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .celda { background: var(--rosa); border: 1px solid var(--vino); border-radius: 8px; overflow: hidden; text-align: center; }
+  .celda b { display: block; padding: 8px 4px; background: #f6a8c2; font-size: .95rem; }
+  .celda span { display: block; padding: 10px 4px; background: var(--rosa-claro); font-size: 1.05rem; }
+  @media (max-width: 760px) {
+    .fila { grid-template-columns: 1fr; }
+    .celdas { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
 </head>
 <body>
+<main>
+  <h1>CÁLCULO INTEGRAL</h1>
+  <p class="nota">Calculadora gráfica interactiva de Sumas de Riemann</p>
 
-    <div class="container">
-        <header>
-            <span class="ribbon-tag">🎀 🌸 Estética Rosa & Precisión 🌸 🎀</span>
-            <h1>Calculadora de Sumas de Riemann</h1>
-            <p id="areaDisplay">Área aproximada: Calculando...</p>
-        </header>
+  <div class="fila">
+    <section class="panel" aria-label="Parámetros">
+      <label for="fx">Función f(x)</label>
+      <input type="text" id="fx" value="x^2" autocomplete="off" spellcheck="false">
 
-        <div class="main-grid">
-            <!-- Panel de Controles -->
-            <div class="controls-panel">
-                <div class="control-group">
-                    <label for="functionInput">Función f(x)</label>
-                    <input type="text" id="functionInput" value="x^2">
-                </div>
+      <label for="a">Extremo inferior (a)</label>
+      <input type="number" id="a" value="1" step="any">
 
-                <div class="control-group">
-                    <label for="aInput">Extremo inferior (a)</label>
-                    <input type="number" id="aInput" value="0" step="0.1">
-                </div>
+      <label for="b">Extremo superior (b)</label>
+      <input type="number" id="b" value="2" step="any">
 
-                <div class="control-group">
-                    <label for="bInput">Extremo superior (b)</label>
-                    <input type="number" id="bInput" value="2" step="0.1">
-                </div>
+      <label for="metodo">Método de aproximación</label>
+      <select id="metodo">
+        <option value="derecho" selected>Extremo Derecho</option>
+        <option value="izquierdo">Extremo Izquierdo</option>
+        <option value="medio">Punto Medio</option>
+        <option value="trapecio">Trapecio</option>
+      </select>
 
-                <div class="control-group">
-                    <label for="methodSelect">Método de aproximación</label>
-                    <select id="methodSelect">
-                        <option value="midpoint">Punto Medio</option>
-                        <option value="left">Extremo Izquierdo</option>
-                        <option value="right">Extremo Derecho</option>
-                    </select>
-                </div>
+      <label for="n">Número de particiones (n): <span id="nValor">20</span></label>
+      <input type="range" id="n" min="1" max="100" value="20">
 
-                <div class="control-group">
-                    <label for="nSlider">Número de rectángulos (n): <span id="nValue">10</span></label>
-                    <input type="range" id="nSlider" min="2" max="50" value="10">
-                </div>
-            </div>
+      <p class="error" id="error" role="alert"></p>
+    </section>
 
-            <!-- Panel de Gráfica -->
-            <div class="chart-panel">
-                <canvas id="riemannChart"></canvas>
-            </div>
-        </div>
+    <section class="panel grafica" aria-label="Gráfica">
+      <canvas id="lienzo" width="800" height="600"></canvas>
+    </section>
+  </div>
 
-        <!-- Tabla de Resultados -->
-        <div class="results-section">
-            <h3 style="margin-top: 0; color: var(--accent-color);">Resumen de Cálculos</h3>
-            <table class="results-table">
-                <thead>
-                    <tr>
-                        <th>Método</th>
-                        <th>Ancho (Δx)</th>
-                        <th>Área Aproximada</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td id="resMethod" style="font-weight: 650;">Punto Medio</td>
-                        <td id="resDelta">-</td>
-                        <td id="resApprox" style="color: var(--accent-color); font-weight: 700;">-</td>
-                        <td style="color: #c9184a; font-weight: 700;">Activo</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+  <section class="panel resumen" aria-label="Resumen de cálculos">
+    <h2>Resumen de Cálculos</h2>
+    <div class="celdas">
+      <div class="celda"><b>Método</b><span id="rMetodo">–</span></div>
+      <div class="celda"><b>Ancho (Δx)</b><span id="rAncho">–</span></div>
+      <div class="celda"><b>Área Aproximada</b><span id="rAprox">–</span></div>
+      <div class="celda"><b>Área Exacta (Ref)</b><span id="rExacta">–</span></div>
     </div>
+  </section>
+</main>
 
-    <script>
-        let chartInstance = null;
+<script>
+const $ = id => document.getElementById(id);
+const cv = $("lienzo"), ctx = cv.getContext("2d");
+const NOMBRES = { derecho: "Extremo Derecho", izquierdo: "Extremo Izquierdo", medio: "Punto Medio", trapecio: "Trapecio" };
 
-        function calculateRiemann() {
-            try {
-                const expr = document.getElementById('functionInput').value;
-                const a = parseFloat(document.getElementById('aInput').value);
-                const b = parseFloat(document.getElementById('bInput').value);
-                const n = parseInt(document.getElementById('nSlider').value);
-                const method = document.getElementById('methodSelect').value;
+function compilar(texto) {
+  const nodo = math.compile(texto.replace(/,/g, "."));
+  const f = x => { const y = nodo.evaluate({ x }); return typeof y === "number" ? y : NaN; };
+  f(1); // prueba para detectar errores de sintaxis
+  return f;
+}
 
-                document.getElementById('nValue').innerText = n;
+// Referencia: regla de Simpson con muchos subintervalos
+function integralExacta(f, a, b) {
+  const N = 2000, h = (b - a) / N;
+  let s = f(a) + f(b);
+  for (let i = 1; i < N; i++) s += f(a + i * h) * (i % 2 ? 4 : 2);
+  return s * h / 3;
+}
 
-                const compiledFn = math.compile(expr);
-                const f = (x) => {
-                    try { return compiledFn.evaluate({ x: x }); } catch (e) { return 0; }
-                };
+function dibujar() {
+  const err = $("error"); err.textContent = "";
+  const a = parseFloat($("a").value), b = parseFloat($("b").value);
+  const n = +$("n").value, metodo = $("metodo").value;
+  $("nValor").textContent = n;
 
-                const dx = (b - a) / n;
-                let approxArea = 0;
+  let f;
+  try { f = compilar($("fx").value); }
+  catch (e) { err.textContent = "Función no válida. Ejemplo: sin(x) + x^2"; return; }
+  if (!isFinite(a) || !isFinite(b) || a >= b) { err.textContent = "Se necesita a < b."; return; }
 
-                let labels = [];
-                let barData = [];
-                let curveData = [];
+  const dx = (b - a) / n;
+  let suma = 0;
+  const bloques = [];
+  for (let i = 0; i < n; i++) {
+    const x0 = a + i * dx, x1 = x0 + dx;
+    let alto, y0 = f(x0), y1 = f(x1);
+    if (metodo === "izquierdo") alto = y0;
+    else if (metodo === "derecho") alto = y1;
+    else if (metodo === "medio") alto = f(x0 + dx / 2);
+    else alto = (y0 + y1) / 2;
+    suma += alto * dx;
+    bloques.push({ x0, x1, y0, y1, alto });
+  }
+  const exacta = integralExacta(f, a, b);
+  if (![suma, exacta].every(isFinite)) { err.textContent = "La función no está definida en todo [a, b]."; return; }
 
-                // Calcular rectángulos y puntos
-                for (let i = 0; i < n; i++) {
-                    let x0 = a + i * dx;
-                    let x1 = a + (i + 1) * dx;
-                    let sampleX;
+  $("rMetodo").textContent = NOMBRES[metodo];
+  $("rAncho").textContent = dx.toFixed(4);
+  $("rAprox").textContent = suma.toFixed(4);
+  $("rExacta").textContent = exacta.toFixed(4);
 
-                    if (method === 'left') {
-                        sampleX = x0;
-                    } else if (method === 'right') {
-                        sampleX = x1;
-                    } else {
-                        sampleX = (x0 + x1) / 2;
-                    }
+  // Rango vertical
+  const puntos = 300, ys = [0];
+  for (let i = 0; i <= puntos; i++) ys.push(f(a + (b - a) * i / puntos));
+  bloques.forEach(k => ys.push(k.alto));
+  const finitos = ys.filter(isFinite);
+  let ymin = Math.min(...finitos), ymax = Math.max(...finitos);
+  const pad = (ymax - ymin || 1) * 0.08; ymin -= ymin < 0 ? pad : 0; ymax += pad;
 
-                    let height = f(sampleX);
-                    approxArea += height * dx;
+  const W = cv.width, H = cv.height, m = { l: 60, r: 20, t: 20, b: 45 };
+  const X = x => m.l + (x - a) / (b - a) * (W - m.l - m.r);
+  const Y = y => H - m.b - (y - ymin) / (ymax - ymin) * (H - m.t - m.b);
 
-                    let midX = (x0 + x1) / 2;
-                    labels.push(midX.toFixed(2));
-                    barData.push(height);
-                }
+  ctx.clearRect(0, 0, W, H);
+  ctx.font = "16px Nunito, sans-serif"; ctx.fillStyle = "#444"; ctx.strokeStyle = "#ddd"; ctx.lineWidth = 1;
 
-                // Generar curva continua suave para f(x)
-                let smoothLabels = [];
-                let smoothCurve = [];
-                const totalPoints = 150;
-                const totalStep = (b - a) / totalPoints;
-                
-                for(let i = 0; i <= totalPoints; i++) {
-                    let xVal = a + i * totalStep;
-                    smoothLabels.push(xVal.toFixed(2));
-                    smoothCurve.push(f(xVal));
-                }
+  // Cuadrícula y etiquetas
+  for (let i = 0; i <= 8; i++) {
+    const y = ymin + (ymax - ymin) * i / 8, py = Y(y);
+    ctx.beginPath(); ctx.moveTo(m.l, py); ctx.lineTo(W - m.r, py); ctx.stroke();
+    ctx.textAlign = "right"; ctx.fillText(y.toFixed(2), m.l - 8, py + 5);
+  }
+  for (let i = 0; i <= 8; i++) {
+    const x = a + (b - a) * i / 8, px = X(x);
+    ctx.beginPath(); ctx.moveTo(px, m.t); ctx.lineTo(px, H - m.b); ctx.stroke();
+    ctx.textAlign = "center"; ctx.fillText(x.toFixed(2), px, H - m.b + 22);
+  }
 
-                document.getElementById('areaDisplay').innerText = `Área aproximada: ${approxArea.toFixed(4)}`;
-                document.getElementById('resMethod').innerText = method === 'left' ? 'Extremo Izquierdo' : (method === 'right' ? 'Extremo Derecho' : 'Punto Medio');
-                document.getElementById('resDelta').innerText = dx.toFixed(4);
-                document.getElementById('resApprox').innerText = approxArea.toFixed(4);
+  // Rectángulos (o trapecios)
+  ctx.fillStyle = "rgba(100,181,246,.45)"; ctx.strokeStyle = "#4a90c9"; ctx.lineWidth = 1;
+  const y0 = Y(Math.max(ymin, Math.min(0, ymax)));
+  bloques.forEach(k => {
+    ctx.beginPath();
+    if (metodo === "trapecio") {
+      ctx.moveTo(X(k.x0), y0); ctx.lineTo(X(k.x0), Y(k.y0));
+      ctx.lineTo(X(k.x1), Y(k.y1)); ctx.lineTo(X(k.x1), y0);
+    } else {
+      ctx.rect(X(k.x0), Y(k.alto), X(k.x1) - X(k.x0), y0 - Y(k.alto));
+    }
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+  });
 
-                updateChart(labels, barData, smoothLabels, smoothCurve);
+  // Curva f(x)
+  ctx.strokeStyle = "#7a0f3a"; ctx.lineWidth = 3; ctx.beginPath();
+  for (let i = 0; i <= puntos; i++) {
+    const x = a + (b - a) * i / puntos, y = f(x);
+    i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y));
+  }
+  ctx.stroke();
+}
 
-            } catch (error) {
-                console.error("Error al calcular:", error);
-            }
-        }
-
-        function updateChart(labels, barData, smoothLabels, smoothCurve) {
-            const ctx = document.getElementById('riemannChart').getContext('2d');
-            
-            if (chartInstance) {
-                chartInstance.destroy();
-            }
-
-            chartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: smoothLabels,
-                    datasets: [
-                        {
-                            label: 'Rectángulos de Riemann',
-                            data: generateBarDataset(smoothLabels, barData, labels),
-                            backgroundColor: 'rgba(255, 179, 193, 0.65)',
-                            borderColor: '#ff85a1',
-                            borderWidth: 1,
-                            barPercentage: 1.0,
-                            categoryPercentage: 1.0,
-                            order: 2
-                        },
-                        {
-                            label: 'f(x)',
-                            data: smoothCurve,
-                            type: 'line',
-                            borderColor: '#c9184a',
-                            borderWidth: 3,
-                            pointRadius: 0,
-                            tension: 0.1,
-                            fill: false,
-                            order: 1
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            grid: { color: '#ffe5ec' },
-                            ticks: { 
-                                font: { family: 'Quicksand' },
-                                maxTicksLimit: 10
-                            }
-                        },
-                        y: {
-                            grid: { color: '#ffe5ec' },
-                            ticks: { font: { family: 'Quicksand' } },
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            labels: { font: { family: 'Quicksand', weight: 'bold' } }
-                        }
-                    }
-                }
-            });
-        }
-
-        function generateBarDataset(smoothLabels, barHeights, barCenters) {
-            // Mapea los rectángulos para que cubran todo el ancho exacto como bloques sólidos
-            let fullData = new Array(smoothLabels.length).fill(null);
-            for (let i = 0; i < barCenters.length; i++) {
-                let centerVal = parseFloat(barCenters[i]);
-                // Encontrar el índice más cercano en smoothLabels
-                let closestIdx = 0;
-                let minDiff = Infinity;
-                for (let j = 0; j < smoothLabels.length; j++) {
-                    let diff = Math.abs(parseFloat(smoothLabels[j]) - centerVal);
-                    if (diff < minDiff) {
-                        minDiff = diff;
-                        closestIdx = j;
-                    }
-                }
-                fullData[closestIdx] = barHeights[i];
-            }
-            return fullData;
-        }
-
-        document.getElementById('functionInput').addEventListener('input', calculateRiemann);
-        document.getElementById('aInput').addEventListener('input', calculateRiemann);
-        document.getElementById('bInput').addEventListener('input', calculateRiemann);
-        document.getElementById('nSlider').addEventListener('input', calculateRiemann);
-        document.getElementById('methodSelect').addEventListener('change', calculateRiemann);
-
-        window.onload = calculateRiemann;
-    </script>
+["fx", "a", "b", "metodo", "n"].forEach(id => $(id).addEventListener("input", dibujar));
+document.fonts.ready.then(dibujar);
+dibujar();
+</script>
 </body>
 </html>
