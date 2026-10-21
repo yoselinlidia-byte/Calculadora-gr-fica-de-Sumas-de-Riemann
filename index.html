@@ -66,6 +66,7 @@
             display: grid;
             grid-template-columns: 1fr 1.2fr;
             gap: 30px;
+            align-items: start;
         }
 
         @media (max-width: 768px) {
@@ -118,23 +119,15 @@
             cursor: pointer;
         }
 
-        /* Panel contenedor de la gráfica con tamaño controlado para que no crezca de más */
+        /* Panel contenedor con altura fija para controlar el tamaño de la gráfica */
         .chart-panel {
             background: #fff;
             border-radius: 18px;
             padding: 15px;
             border: 1px solid #ffe5ec;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             position: relative;
-            height: 420px; /* Altura fija para evitar el bug de expansión */
-        }
-
-        canvas {
-            width: 100% !important;
-            height: 100% !important;
+            width: 100%;
+            height: 400px;
         }
 
         .results-section {
@@ -215,7 +208,7 @@
 
                 <div class="control-group">
                     <label for="nSlider">Número de rectángulos (n): <span id="nValue">10</span></label>
-                    <input type="range" id="nSlider" min="2" max="100" value="10">
+                    <input type="range" id="nSlider" min="2" max="50" value="10">
                 </div>
             </div>
 
@@ -269,17 +262,13 @@
 
                 const dx = (b - a) / n;
                 let approxArea = 0;
+
+                // Construir etiquetas y rectángulos exactamente como bloques de barras
                 let labels = [];
+                let barData = [];
                 let curveData = [];
 
-                const steps = 200;
-                const stepSize = (b - a) / steps;
-                for (let i = 0; i <= steps; i++) {
-                    let xVal = a + i * stepSize;
-                    labels.push(xVal.toFixed(2));
-                    curveData.push(f(xVal));
-                }
-
+                // Generar puntos de la curva y las barras alineadas por intervalos
                 for (let i = 0; i < n; i++) {
                     let x0 = a + i * dx;
                     let x1 = a + (i + 1) * dx;
@@ -295,34 +284,41 @@
 
                     let height = f(sampleX);
                     approxArea += height * dx;
+
+                    // Usar el punto medio del intervalo como etiqueta en el eje X
+                    let midX = (x0 + x1) / 2;
+                    labels.push(midX.toFixed(2));
+                    barData.push(height);
+                    curveData.push(f(midX));
                 }
 
-                let barData = new Array(labels.length).fill(null);
-                for (let i = 0; i < n; i++) {
-                    let x0 = a + i * dx;
-                    let x1 = a + (i + 1) * dx;
-                    let sampleX = method === 'left' ? x0 : (method === 'right' ? x1 : (x0 + x1) / 2);
-                    let height = f(sampleX);
-
-                    let index = Math.round(((sampleX - a) / (b - a)) * steps);
-                    if (index >= 0 && index < barData.length) {
-                        barData[index] = height;
-                    }
+                // Generar puntos extras para que la línea de la función f(x) se vea suave y continua
+                let smoothLabels = [];
+                let smoothCurve = [];
+                let smoothBars = [];
+                
+                const totalPoints = 100;
+                const totalStep = (b - a) / totalPoints;
+                for(let i = 0; i <= totalPoints; i++) {
+                    let xVal = a + i * totalStep;
+                    smoothLabels.push(xVal.toFixed(2));
+                    smoothCurve.push(f(xVal));
                 }
 
+                // Mapear rectángulos sólidos ajustando el ancho de las barras al 100%
                 document.getElementById('areaDisplay').innerText = `Área aproximada: ${approxArea.toFixed(4)}`;
                 document.getElementById('resMethod').innerText = method === 'left' ? 'Extremo Izquierdo' : (method === 'right' ? 'Extremo Derecho' : 'Punto Medio');
                 document.getElementById('resDelta').innerText = dx.toFixed(4);
                 document.getElementById('resApprox').innerText = approxArea.toFixed(4);
 
-                updateChart(labels, curveData, barData);
+                updateChart(labels, barData, smoothLabels, smoothCurve);
 
             } catch (error) {
                 console.error("Error al calcular:", error);
             }
         }
 
-        function updateChart(labels, curveData, barData) {
+        function updateChart(labels, barData, smoothLabels, smoothCurve) {
             const ctx = document.getElementById('riemannChart').getContext('2d');
             
             if (chartInstance) {
@@ -330,28 +326,31 @@
             }
 
             chartInstance = new Chart(ctx, {
-                type: 'line',
+                type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [
                         {
-                            label: 'f(x)',
-                            data: curveData,
+                            label: 'Rectángulos de Riemann',
+                            data: barData,
+                            backgroundColor: 'rgba(255, 179, 193, 0.65)',
+                            borderColor: '#ff85a1',
+                            borderWidth: 1.5,
+                            barPercentage: 1.0,
+                            categoryPercentage: 1.0,
+                            order: 2
+                        },
+                        {
+                            label: 'f(x) = x^2',
+                            data: smoothCurve,
+                            type: 'line',
                             borderColor: '#c9184a',
                             borderWidth: 3,
                             pointRadius: 0,
-                            tension: 0.1,
-                            fill: false
-                        },
-                        {
-                            label: 'Rectángulos de Riemann',
-                            data: barData,
-                            type: 'bar',
-                            backgroundColor: 'rgba(255, 179, 193, 0.65)',
-                            borderColor: '#ff85a1',
-                            borderWidth: 1,
-                            barPercentage: 1.0,
-                            categoryPercentage: 1.0
+                            tension: 0.2,
+                            fill: false,
+                            order: 1,
+                            xAxisID: 'x'
                         }
                     ]
                 },
@@ -361,11 +360,15 @@
                     scales: {
                         x: {
                             grid: { color: '#ffe5ec' },
-                            ticks: { font: { family: 'Quicksand' } }
+                            ticks: { 
+                                font: { family: 'Quicksand' },
+                                maxTicksLimit: 10
+                            }
                         },
                         y: {
                             grid: { color: '#ffe5ec' },
-                            ticks: { font: { family: 'Quicksand' } }
+                            ticks: { font: { family: 'Quicksand' } },
+                            beginAtZero: true
                         }
                     },
                     plugins: {
