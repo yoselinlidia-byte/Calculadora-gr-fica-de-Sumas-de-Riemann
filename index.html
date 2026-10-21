@@ -3,32 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cálculo Integral - Sumas de Riemann</title>
+    <title>Calculadora de Sumas de Riemann 🎀 Rosa Estético</title>
     <!-- Chart.js para la gráfica interactiva -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Math.js para evaluar funciones de forma segura -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
-    <!-- Fuentes estilo escrito a mano y limpias -->
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-grid: #f3d6dc;
-            --main-title: #7a1c31;
-            --card-bg: #fff5f7;
-            --border-sketch: #7a1c31;
-            --text-color: #4a2e35;
-            --accent-pink: #e2879c;
+            --bg-color: #fff0f3;
+            --card-bg: #ffffff;
+            --primary-color: #ffb3c1;
+            --secondary-color: #ff85a1;
+            --accent-color: #c9184a;
+            --text-color: #59405c;
+            --input-border: #ffccd5;
+            --shadow: 0 10px 25px rgba(255, 131, 161, 0.15);
         }
 
         body {
             font-family: 'Quicksand', sans-serif;
-            background-color: #fae1e6;
-            /* Fondo cuadriculado estilo libreta */
-            background-image: 
-                linear-gradient(to right, rgba(222, 160, 172, 0.3) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(222, 160, 172, 0.3) 1px, transparent 1px);
-            background-size: 20px 20px;
+            background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 20px;
@@ -39,58 +36,36 @@
 
         .container {
             width: 100%;
-            max-width: 950px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
+            max-width: 1000px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            box-sizing: border-box;
+            border: 2px solid #ffccd5;
         }
 
         header {
             text-align: center;
-            position: relative;
-            margin-top: 10px;
+            margin-bottom: 25px;
         }
 
         h1 {
-            color: var(--main-title);
-            font-size: 2.5rem;
-            font-weight: 700;
-            letter-spacing: 1px;
+            color: var(--accent-color);
+            font-size: 2.2rem;
             margin-bottom: 5px;
-            text-transform: uppercase;
         }
 
-        /* Efecto de nota adhesiva con cinta en el subtítulo */
-        .tape-banner {
-            display: inline-block;
-            background: #ffffff;
-            border: 2px solid var(--border-sketch);
-            padding: 8px 20px;
-            font-weight: 700;
+        header p {
+            color: #8c6d96;
             font-size: 1.1rem;
-            color: var(--text-color);
-            box-shadow: 3px 3px 0px rgba(122, 28, 49, 0.2);
-            position: relative;
-            transform: rotate(-1deg);
-            margin-top: 5px;
-        }
-
-        .tape-banner::before {
-            content: "";
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 16px;
-            background-color: rgba(255, 255, 255, 0.6);
-            border: 1px dashed #b5838d;
+            font-weight: 600;
         }
 
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1.2fr;
-            gap: 25px;
+            gap: 30px;
         }
 
         @media (max-width: 768px) {
@@ -99,13 +74,11 @@
             }
         }
 
-        /* Tarjetas estilo libreta con borde dibujado */
-        .sketch-card {
-            background-color: var(--card-bg);
-            border: 2.5px solid var(--border-sketch);
-            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px; /* Bordes irregulares orgánicos estilo libreta */
-            padding: 25px;
-            box-shadow: 4px 4px 0px rgba(122, 28, 49, 0.15);
+        .controls-panel {
+            background-color: #fff9fa;
+            padding: 20px;
+            border-radius: 18px;
+            border: 1px solid #ffe5ec;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -114,89 +87,93 @@
         .control-group {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 6px;
         }
 
         label {
             font-weight: 700;
             font-size: 0.95rem;
-            color: var(--main-title);
+            color: var(--text-color);
         }
 
         input, select {
             padding: 10px 14px;
             border-radius: 12px;
-            border: 2px solid var(--border-sketch);
-            background-color: #ffffff;
+            border: 1px solid var(--input-border);
+            background-color: #fff;
             font-family: 'Quicksand', sans-serif;
             font-size: 1rem;
             color: var(--text-color);
             outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 8px rgba(255, 133, 161, 0.3);
         }
 
         input[type="range"] {
-            accent-color: var(--main-title);
+            accent-color: var(--secondary-color);
             cursor: pointer;
-            border: none;
-            background: transparent;
         }
 
-        .chart-container {
+        /* Panel contenedor de la gráfica con tamaño controlado para que no crezca de más */
+        .chart-panel {
+            background: #fff;
+            border-radius: 18px;
+            padding: 15px;
+            border: 1px solid #ffe5ec;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             position: relative;
+            height: 420px; /* Altura fija para evitar el bug de expansión */
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .results-section {
+            margin-top: 30px;
+            background: #fff9fa;
+            border-radius: 18px;
+            padding: 20px;
+            border: 1px solid #ffe5ec;
+        }
+
+        .results-table {
             width: 100%;
-            height: 320px;
-            background: #ffffff;
-            border: 2px solid var(--border-sketch);
-            border-radius: 12px;
-            padding: 5px;
-        }
-
-        /* Sección de Resultados Estilo Cuadros Separados */
-        .results-container {
-            background-color: var(--card-bg);
-            border: 2.5px solid var(--border-sketch);
-            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
-            padding: 20px 25px;
-            box-shadow: 4px 4px 0px rgba(122, 28, 49, 0.15);
-        }
-
-        .results-title {
-            color: var(--main-title);
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            margin-top: 0;
-        }
-
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-        }
-
-        .result-box {
-            background: #ffffff;
-            border: 2px solid var(--border-sketch);
-            border-radius: 15px;
+            border-collapse: collapse;
+            margin-top: 10px;
             text-align: center;
-            overflow: hidden;
-            box-shadow: 2px 2px 0px rgba(122, 28, 49, 0.1);
         }
 
-        .result-box-header {
-            background-color: #f7cad0;
-            color: var(--main-title);
-            font-weight: 700;
-            font-size: 0.9rem;
-            padding: 8px;
-            border-bottom: 2px solid var(--border-sketch);
-        }
-
-        .result-box-body {
+        .results-table th, .results-table td {
             padding: 12px;
+            border-bottom: 1px solid #ffe5ec;
+            font-size: 0.95rem;
+        }
+
+        .results-table th {
+            color: var(--accent-color);
             font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--text-color);
+            background-color: #ffe5ec;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .ribbon-tag {
+            display: inline-block;
+            background: var(--primary-color);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -204,15 +181,14 @@
 
     <div class="container">
         <header>
-            <h1>Cálculo Integral</h1>
-            <div class="tape-banner">
-                Calculadora gráfica interactiva de Sumas de Riemann
-            </div>
+            <span class="ribbon-tag">🎀 🌸 Estética Rosa & Precisión 🌸 🎀</span>
+            <h1>Calculadora de Sumas de Riemann</h1>
+            <p id="areaDisplay">Área aproximada: Calculando...</p>
         </header>
 
         <div class="main-grid">
-            <!-- Panel de Controles (Estilo Libreta) -->
-            <div class="sketch-card">
+            <!-- Panel de Controles -->
+            <div class="controls-panel">
                 <div class="control-group">
                     <label for="functionInput">Función f(x)</label>
                     <input type="text" id="functionInput" value="x^2">
@@ -220,7 +196,7 @@
 
                 <div class="control-group">
                     <label for="aInput">Extremo inferior (a)</label>
-                    <input type="number" id="aInput" value="1" step="0.1">
+                    <input type="number" id="aInput" value="0" step="0.1">
                 </div>
 
                 <div class="control-group">
@@ -229,49 +205,47 @@
                 </div>
 
                 <div class="control-group">
-                    <label for="methodSelect">Método de aproximación</label>
+                    <label for="methodSelect">Método</label>
                     <select id="methodSelect">
-                        <option value="right">Extremo Derecho</option>
-                        <option value="left">Extremo Izquierdo</option>
                         <option value="midpoint">Punto Medio</option>
+                        <option value="left">Extremo Izquierdo</option>
+                        <option value="right">Extremo Derecho</option>
                     </select>
                 </div>
 
                 <div class="control-group">
-                    <label for="nSlider">Número de particiones (n): <span id="nValue">10</span></label>
+                    <label for="nSlider">Número de rectángulos (n): <span id="nValue">10</span></label>
                     <input type="range" id="nSlider" min="2" max="100" value="10">
                 </div>
             </div>
 
-            <!-- Panel de Gráfica (Estilo Apunte) -->
-            <div class="sketch-card" style="align-items: center; justify-content: center;">
-                <div class="chart-container">
-                    <canvas id="riemannChart"></canvas>
-                </div>
+            <!-- Panel de Gráfica -->
+            <div class="chart-panel">
+                <canvas id="riemannChart"></canvas>
             </div>
         </div>
 
-        <!-- Sección de Resumen de Cálculos (Cuadros separados estilo imagen) -->
-        <div class="results-container">
-            <h3 class="results-title">Resumen de Cálculos</h3>
-            <div class="results-grid">
-                <div class="result-box">
-                    <div class="result-box-header">Método</div>
-                    <div class="result-box-body" id="resMethod">Extremo Derecho</div>
-                </div>
-                <div class="result-box">
-                    <div class="result-box-header">Ancho (Δx)</div>
-                    <div class="result-box-body" id="resDelta">-</div>
-                </div>
-                <div class="result-box">
-                    <div class="result-box-header">Área Aproximada</div>
-                    <div class="result-box-body" id="resApprox" style="color: var(--main-title);">-</div>
-                </div>
-                <div class="result-box">
-                    <div class="result-box-header">Área Exacta (Ref)</div>
-                    <div class="result-box-body" id="resExact">-</div>
-                </div>
-            </div>
+        <!-- Tabla de Resultados -->
+        <div class="results-section">
+            <h3 style="margin-top: 0; color: var(--accent-color);">Resumen de Cálculos</h3>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Método</th>
+                        <th>Ancho (Δx)</th>
+                        <th>Área Aproximada</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="resMethod" style="font-weight: 650;">Punto Medio</td>
+                        <td id="resDelta">-</td>
+                        <td id="resApprox" style="color: var(--accent-color); font-weight: 700;">-</td>
+                        <td style="color: #2a9d8f; font-weight: 700;">Exacto</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -298,7 +272,7 @@
                 let labels = [];
                 let curveData = [];
 
-                const steps = 150;
+                const steps = 200;
                 const stepSize = (b - a) / steps;
                 for (let i = 0; i <= steps; i++) {
                     let xVal = a + i * stepSize;
@@ -309,7 +283,16 @@
                 for (let i = 0; i < n; i++) {
                     let x0 = a + i * dx;
                     let x1 = a + (i + 1) * dx;
-                    let sampleX = method === 'left' ? x0 : (method === 'right' ? x1 : (x0 + x1) / 2);
+                    let sampleX;
+
+                    if (method === 'left') {
+                        sampleX = x0;
+                    } else if (method === 'right') {
+                        sampleX = x1;
+                    } else {
+                        sampleX = (x0 + x1) / 2;
+                    }
+
                     let height = f(sampleX);
                     approxArea += height * dx;
                 }
@@ -327,10 +310,10 @@
                     }
                 }
 
-                document.getElementById('resMethod').innerText = method === 'left' ? 'Extremo Izq.' : (method === 'right' ? 'Extremo Der.' : 'Punto Medio');
+                document.getElementById('areaDisplay').innerText = `Área aproximada: ${approxArea.toFixed(4)}`;
+                document.getElementById('resMethod').innerText = method === 'left' ? 'Extremo Izquierdo' : (method === 'right' ? 'Extremo Derecho' : 'Punto Medio');
                 document.getElementById('resDelta').innerText = dx.toFixed(4);
                 document.getElementById('resApprox').innerText = approxArea.toFixed(4);
-                document.getElementById('resExact').innerText = "Integración";
 
                 updateChart(labels, curveData, barData);
 
@@ -354,18 +337,18 @@
                         {
                             label: 'f(x)',
                             data: curveData,
-                            borderColor: '#7a1c31',
+                            borderColor: '#c9184a',
                             borderWidth: 3,
                             pointRadius: 0,
                             tension: 0.1,
                             fill: false
                         },
                         {
-                            label: 'Rectángulos',
+                            label: 'Rectángulos de Riemann',
                             data: barData,
                             type: 'bar',
-                            backgroundColor: 'rgba(226, 135, 156, 0.55)',
-                            borderColor: '#7a1c31',
+                            backgroundColor: 'rgba(255, 179, 193, 0.65)',
+                            borderColor: '#ff85a1',
                             borderWidth: 1,
                             barPercentage: 1.0,
                             categoryPercentage: 1.0
@@ -377,17 +360,17 @@
                     maintainAspectRatio: false,
                     scales: {
                         x: {
-                            grid: { color: 'rgba(122, 28, 49, 0.1)' },
-                            ticks: { font: { family: 'Quicksand' }, color: '#4a2e35' }
+                            grid: { color: '#ffe5ec' },
+                            ticks: { font: { family: 'Quicksand' } }
                         },
                         y: {
-                            grid: { color: 'rgba(122, 28, 49, 0.1)' },
-                            ticks: { font: { family: 'Quicksand' }, color: '#4a2e35' }
+                            grid: { color: '#ffe5ec' },
+                            ticks: { font: { family: 'Quicksand' } }
                         }
                     },
                     plugins: {
                         legend: {
-                            labels: { font: { family: 'Quicksand', weight: 'bold' }, color: '#4a2e35' }
+                            labels: { font: { family: 'Quicksand', weight: 'bold' } }
                         }
                     }
                 }
